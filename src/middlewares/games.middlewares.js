@@ -11,6 +11,16 @@ const gameSchema = joi.object({
     pricePerDay: joi.number().integer().min(1).required()
 });
 
+async function validateQueryFilterGames (req, res, next){
+    let filter = '';
+    if (req.query.name) {
+        filter = stripHtml(req.query.name.toLowerCase()).result;
+    };
+    
+    res.locals.filter = filter;
+    next();
+}
+
 async function validateGamesInput (req, res, next) {
     const gameObj = req.body;
 
@@ -45,4 +55,4 @@ async function validateGamesInput (req, res, next) {
     next();
 };
 
-export { validateGamesInput };
+export { validateQueryFilterGames, validateGamesInput };

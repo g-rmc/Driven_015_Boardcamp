@@ -1,11 +1,7 @@
 import { connection } from '../db/database.js';
 
 async function getGames (req,res) {
-    let filter = '';
-    if (req.query.name) {
-        filter = req.query.name.toLowerCase();
-    }
-
+    const filter = res.locals.filter;
     try {
         const games = await connection.query(
             `SELECT games.*, categories.name AS "categoryName"

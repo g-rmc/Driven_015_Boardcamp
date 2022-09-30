@@ -1,4 +1,3 @@
-import joi from 'joi';
 import { stripHtml } from 'string-strip-html';
 
 import { connection } from '../db/database.js';

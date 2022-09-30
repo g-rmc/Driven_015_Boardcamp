@@ -1,7 +1,48 @@
 import joi from 'joi';
+import { stripHtml } from 'string-strip-html';
 
-// Validar inputs existem
+import { connection } from '../db/database.js';
 
-//Verificar id válido
+const gameSchema = joi.object({
+    name: joi.string().required(),
+    image: joi.string().required(),
+    stockTotal: joi.number().integer().min(1).required(),
+    categoryId: joi.number().integer().required(),
+    pricePerDay: joi.number().integer().min(1).required()
+});
 
-// Verificar nome duplicado
+async function validateGamesInput (req, res, next) {
+    const gameObj = req.body;
+
+    const validation = gameSchema.validate(gameObj, {abortEarly: false});
+    if(validation.error){
+        return res.status(400).send(validation.error.details.map(err => err.message));
+    };
+
+    try {
+        const validId = await connection.query('SELECT * FROM categories WHERE id = $1',[gameObj.categoryId]);
+        if (validId.rows.length === 0){
+            return res.status(400).send('categoryId not found');
+        }
+    } catch (error) {
+        return res.status(500).send(error);
+    };
+
+    try {
+        
+        const validName = await connection.query('SELECT * FROM games WHERE name = $1',[gameObj.name]);
+        if (validName.rows.length !== 0){
+            return res.status(409).send('name already exists');
+        }
+    } catch (error) {
+        return res.status(500).send(error);
+    };
+
+    res.locals.gameObj = {...gameObj,
+        name:stripHtml(gameObj.name).result,
+        image:stripHtml(gameObj.image).result
+    };
+    next();
+};
+
+export { validateGamesInput };

@@ -20,20 +20,19 @@ async function getGames (req,res) {
 }
 
 async function postGame (req,res) {
-    const obj = req.body;
-    console.log(obj);
-    const validInputs = obj.name?.length > 0 && obj.stockTotal > 0 && obj.pricePerDay > 0;
-     try {
-        const validId = await connection.query('SELECT * FROM categories WHERE id = $1',[obj.categoryId]);
-        if (!validInputs || validId.length === 0){
-            return res.status(400).send('invalid inputs');
-        }
+    const gameObj = res.locals.gameObj;
+    try {
+        await connection.query(
+            `INSERT INTO games
+            (name, image, "stockTotal", "categoryId", "pricePerDay")
+            VALUES
+            ($1, $2, $3, $4, $5)`,
+            [gameObj.name, gameObj.image, gameObj.stockTotal, gameObj.categoryId, gameObj.pricePerDay]
+        );
+        res.sendStatus(201);
     } catch (error) {
-        return res.status(500).send(error);
-    } 
-
-    console.log('postGame');
-    res.sendStatus(200);
+        res.status(500).send(error);
+    }
 }
 
 export { getGames, postGame };

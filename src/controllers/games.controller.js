@@ -8,7 +8,12 @@ async function getGames (req,res) {
     }
 
     try {
-        const games = await connection.query("SELECT * FROM games WHERE lower(name) LIKE $1;", [filter+'%']);
+        const games = await connection.query(
+            `SELECT games.*, categories.name AS "categoryName"
+            FROM games JOIN categories ON games."categoryId" = categories.id
+            WHERE LOWER(games.name) LIKE $1;`,
+            [filter+'%']
+        );
         res.send(games.rows);
     } catch (error) {
         res.status(500).send(error);

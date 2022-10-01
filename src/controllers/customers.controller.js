@@ -15,8 +15,7 @@ async function getCustomers (req, res) {
 };
 
 async function getCustomerById (req, res) {
-    console.log('getCustomerById');
-    res.sendStatus(200);
+    res.send(res.locals.customer[0]);
 };
 
 async function postNewCustomer (req, res) {
@@ -29,4 +28,9 @@ async function editCustomerById (req, res) {
     res.sendStatus(200);
 };
 
-export { getCustomers, getCustomerById, postNewCustomer, editCustomerById }
+export { 
+    getCustomers,
+    getCustomerById,
+    postNewCustomer,
+    editCustomerById
+}

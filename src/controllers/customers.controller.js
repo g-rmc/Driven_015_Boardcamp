@@ -35,8 +35,24 @@ async function postNewCustomer (req, res) {
 };
 
 async function editCustomerById (req, res) {
-    console.log('editCustomerById');
-    res.sendStatus(200);
+    const id = res.locals.id;
+    const { name, phone, cpf, birthday } = res.locals.customerObj;
+    try {
+        await connection.query(
+            `UPDATE customers
+            SET
+            name = $1,
+            phone = $2,
+            cpf = $3,
+            birthday = $4
+            WHERE
+            id = $5`,
+            [name, phone, cpf, birthday, id]
+        );
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(500).send(error);
+    }
 };
 
 export { 

@@ -41,13 +41,20 @@ async function validateCustomerId (req, res, next) {
     next();
 }
 
-async function validateNewCustomer (req, res, next) {
+async function validateCustomerObj (req, res, next) {
     const customerObj = req.body;
 
     const validation = customerSchema.validate(customerObj, {abortEarly: false});
     if(validation.error){
         return res.status(400).send(validation.error.details.map(err => err.message));
     };
+
+    res.locals.customerObj = customerObj;
+    next();
+}
+
+async function validateNewCustomer (req, res, next) {
+    const customerObj = res.locals.customerObj;
 
     try {
         const validCpf = await connection.query(
@@ -70,5 +77,6 @@ async function validateNewCustomer (req, res, next) {
 export {
     validateQueryFilterCustomers,
     validateCustomerId,
+    validateCustomerObj,
     validateNewCustomer
 };

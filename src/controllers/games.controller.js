@@ -16,14 +16,14 @@ async function getGames (req,res) {
 }
 
 async function postGame (req,res) {
-    const gameObj = res.locals.gameObj;
+    const { name, image, stockTotal, categoryId, pricePerDay} = res.locals.gameObj;
     try {
         await connection.query(
             `INSERT INTO games
             (name, image, "stockTotal", "categoryId", "pricePerDay")
             VALUES
             ($1, $2, $3, $4, $5)`,
-            [gameObj.name, gameObj.image, gameObj.stockTotal, gameObj.categoryId, gameObj.pricePerDay]
+            [name, image, stockTotal, categoryId, pricePerDay]
         );
         res.sendStatus(201);
     } catch (error) {

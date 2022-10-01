@@ -16,7 +16,6 @@ async function validateQueryFilterGames (req, res, next){
     if (req.query.name) {
         filter = stripHtml(req.query.name.toLowerCase()).result;
     };
-    
     res.locals.filter = filter;
     next();
 }

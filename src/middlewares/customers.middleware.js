@@ -53,8 +53,9 @@ async function validateCustomerObj (req, res, next) {
     next();
 }
 
-async function validateNewCustomer (req, res, next) {
+async function validateNewCpf (req, res, next) {
     const customerObj = res.locals.customerObj;
+    const id = res.locals.id;
 
     try {
         const validCpf = await connection.query(
@@ -62,7 +63,9 @@ async function validateNewCustomer (req, res, next) {
             [stripHtml(customerObj.cpf).result]
         );
         if (validCpf.rows.length !== 0){
-            return res.status(409).send('cpf already exists');
+            if (!id || Number(id) !== Number(validCpf.rows[0].id)){
+                return res.status(409).send('cpf already exists');
+            }
         }
     } catch (error) {
         return res.status(500).send(error);
@@ -78,5 +81,5 @@ export {
     validateQueryFilterCustomers,
     validateCustomerId,
     validateCustomerObj,
-    validateNewCustomer
+    validateNewCpf
 };

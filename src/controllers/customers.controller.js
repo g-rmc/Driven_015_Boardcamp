@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { connection } from '../db/database.js';
 
 async function getCustomers (req, res) {
@@ -15,7 +16,8 @@ async function getCustomers (req, res) {
 };
 
 async function getCustomerById (req, res) {
-    res.send(res.locals.customer[0]);
+    const customerObj = res.locals.customer[0];
+    res.send({...customerObj, birthday: dayjs(customerObj.birthday).format('YYYY-MM-DD')});
 };
 
 async function postNewCustomer (req, res) {

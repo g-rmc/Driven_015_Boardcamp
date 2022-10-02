@@ -1,15 +1,7 @@
-import joi from 'joi';
 import { stripHtml } from 'string-strip-html';
 
 import { connection } from '../db/database.js';
-
-const gameSchema = joi.object({
-    name: joi.string().required(),
-    image: joi.string().pattern(/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/, 'html').required(),
-    stockTotal: joi.number().integer().min(1).required(),
-    categoryId: joi.number().integer().required(),
-    pricePerDay: joi.number().integer().min(1).required()
-});
+import { gameSchema } from '../schemas/game.schema.js';
 
 async function validateQueryFilterGames (req, res, next) {
     let filter = '';

@@ -141,8 +141,17 @@ async function postFinishRental (req, res) {
 }
 
 async function deleteRentalById (req, res) {
-    console.log('deleteRentalById');
-    res.sendStatus(200);
+    const { id } = res.locals.rentalObj;
+    try {
+        await connection.query(
+            `DELETE FROM rentals
+            WHERE id = $1;`,
+            [id]
+        );
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(500).send(error);
+    }
 }
 
 export {

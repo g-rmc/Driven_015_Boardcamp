@@ -53,9 +53,15 @@ async function validateRentalInputs (req, res, next) {
 
     try {
         const rentalQnt = await connection.query(
-            `SELECT * FROM rentals WHERE "gameId" = $1;`,
+            `SELECT * FROM rentals
+            WHERE
+                "gameId" = $1
+                AND
+                "returnDate" IS NULL
+            ;`,
             [rentalObj.gameId]
         );
+        console.log(rentalQnt.rows)
         if (rentalQnt.rows.length >= gameObj.stockTotal){
             return res.status(400).send('game not available');
         }

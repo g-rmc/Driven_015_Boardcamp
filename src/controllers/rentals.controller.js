@@ -44,7 +44,7 @@ async function getRentals (req, res) {
             gameId: rental.gameId,
             rentDate: dayjs(rental.rentDate).format('YYYY-MM-DD'),
             daysRented: rental.daysRented,
-            retunDate: rental.retunDate? dayjs(rental.retunDate).format('YYYY-MM-DD') : null,
+            returnDate: rental.returnDate? dayjs(rental.returnDate).format('YYYY-MM-DD') : null,
             originalPrice: rental.originalPrice,
             delayFee: rental.delayFee,
             customer: {
@@ -91,7 +91,7 @@ async function postNewRental (req, res) {
             rental.gameId,
             rental.rentDate,
             rental.daysRented,
-            rental.rentDate,
+            rental.returnDate,
             rental.originalPrice,
             rental.delayFee
         ]
@@ -103,8 +103,41 @@ async function postNewRental (req, res) {
 }
 
 async function postFinishRental (req, res) {
-    console.log('postFinishRental');
-    res.sendStatus(200);
+    const rentalObj = res.locals.rentalObj;
+    const rentalDuration = dayjs().diff(dayjs(rentalObj.rentDate), 'day');
+    let delayFee = 0;
+
+    if (rentalDuration > rentalObj.daysRented) {
+        const delay = rentalDuration - rentalObj.daysRented;
+        delayFee = delay * Math.abs(rentalObj.originalPrice/rentalObj.daysRented);
+    };
+
+    const returnObj = {
+        ...rentalObj,
+        rentDate: dayjs(rentalObj.rentDate).format('YYYY-MM-DD'),
+        returnDate: dayjs().format('YYYY-MM-DD'),
+        delayFee
+    }
+
+    try {
+        await connection.query(
+            `UPDATE rentals
+            SET
+                "returnDate" = $1,
+                "delayFee" = $2
+            WHERE
+                id = $3
+            ;`,
+            [
+                returnObj.returnDate,
+                returnObj.delayFee,
+                returnObj.id
+            ]
+        );
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(500).send(error);
+    }
 }
 
 async function deleteRentalById (req, res) {

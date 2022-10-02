@@ -69,7 +69,37 @@ async function validateRentalInputs (req, res, next) {
     next();
 }
 
+async function validateRentalIdInput (req, res, next) {
+    const id = Number(req.params.ID);
+    let rentalObj = null;
+
+    if (isNaN(id)){
+        return res.status(400).send('invalid id');
+    };
+
+    try {
+        const validRental = await connection.query(
+            `SELECT * FROM rentals WHERE id = $1;`,
+            [id]
+        );
+        if (validRental.rows.length === 0) {
+            return res.status(404).send('id not found');
+        }
+        rentalObj = validRental.rows[0];
+    } catch (error) {
+        return res.status(500).send(error);
+    };
+
+    if (rentalObj.returnDate) {
+        return res.status(400).send('rental already finished');
+    }
+    
+    res.locals.rentalObj = rentalObj;
+    next();
+}
+
 export {
     validateQueryFilterRentals,
-    validateRentalInputs
+    validateRentalInputs,
+    validateRentalIdInput
 }

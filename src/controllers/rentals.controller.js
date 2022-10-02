@@ -66,17 +66,49 @@ async function getRentals (req, res) {
 }
 
 async function postNewRental (req, res) {
-    console.log('getRentals');
-    res.sendStatus(200);
+    const rentalObj = res.locals.rentalObj;
+    const { pricePerDay } = res.locals.gameObj;
+
+    const originalPrice = rentalObj.daysRented * pricePerDay
+
+    const rental = {
+        ...rentalObj,
+        rentDate: dayjs().format('YYYY-MM-DD'),
+        returnDate: null,
+        originalPrice,
+        delayFee: null
+    }
+    
+    try {
+        await connection.query(`
+            INSERT INTO rentals
+            ("customerId", "gameId", "rentDate", "daysRented", "returnDate", "originalPrice", "delayFee")
+            VALUES
+            ($1, $2, $3, $4, $5, $6, $7)
+        ;`,
+        [
+            rental.customerId,
+            rental.gameId,
+            rental.rentDate,
+            rental.daysRented,
+            rental.rentDate,
+            rental.originalPrice,
+            rental.delayFee
+        ]
+        );
+        res.sendStatus(201);
+    } catch (error) {
+        res.status(500).send(error);
+    }
 }
 
 async function postFinishRental (req, res) {
-    console.log('getRentals');
+    console.log('postFinishRental');
     res.sendStatus(200);
 }
 
 async function deleteRentalById (req, res) {
-    console.log('getRentals');
+    console.log('deleteRentalById');
     res.sendStatus(200);
 }
 

@@ -10,7 +10,7 @@ async function validateCategoriesInput (req, res, next) {
     }
 
     try {
-        const sameCategory = await connection.query('SELECT * FROM categories WHERE name = $1', [name]);
+        const sameCategory = await connection.query('SELECT * FROM categories WHERE name = $1', [stripHtml(name).result]);
         if(sameCategory.rows.length !== 0){
             return res.status(409).send('name must be unique');
         }
@@ -18,7 +18,7 @@ async function validateCategoriesInput (req, res, next) {
         return res.status(500).send(error);
     }
 
-    res.locals.name = stripHtml(name);
+    res.locals.name = stripHtml(name).result;
     next();
 };
 

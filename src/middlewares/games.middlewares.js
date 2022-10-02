@@ -11,7 +11,7 @@ const gameSchema = joi.object({
     pricePerDay: joi.number().integer().min(1).required()
 });
 
-async function validateQueryFilterGames (req, res, next){
+async function validateQueryFilterGames (req, res, next) {
     let filter = '';
 
     if (req.query.name) {

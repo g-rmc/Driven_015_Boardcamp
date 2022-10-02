@@ -36,7 +36,6 @@ async function validateCustomerId (req, res, next) {
 
 async function validateCustomerObj (req, res, next) {
     const customerObj = req.body;
-    console.log('aqui não pô')
     const validation = customerSchema.validate(customerObj, {abortEarly: false});
     if(validation.error){
         return res.status(400).send(validation.error.details.map(err => err.message));

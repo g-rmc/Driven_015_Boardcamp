@@ -61,7 +61,6 @@ async function validateRentalInputs (req, res, next) {
             ;`,
             [rentalObj.gameId]
         );
-        console.log(rentalQnt.rows)
         if (rentalQnt.rows.length >= gameObj.stockTotal){
             return res.status(400).send('game not available');
         }

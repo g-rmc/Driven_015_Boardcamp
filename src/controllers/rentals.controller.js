@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
 import { connection } from "../db/database.js";
 
+const dateFormat = 'YYYY-MM-DD';
+
 async function getRentals (req, res) {
     const customerFilter = res.locals.customerFilter;
     const gameFilter = res.locals.gameFilter;
@@ -42,9 +44,9 @@ async function getRentals (req, res) {
             id: rental.id,
             customerId: rental.customerId,
             gameId: rental.gameId,
-            rentDate: dayjs(rental.rentDate).format('YYYY-MM-DD'),
+            rentDate: dayjs(rental.rentDate).format(dateFormat),
             daysRented: rental.daysRented,
-            returnDate: rental.returnDate? dayjs(rental.returnDate).format('YYYY-MM-DD') : null,
+            returnDate: rental.returnDate? dayjs(rental.returnDate).format(dateFormat) : null,
             originalPrice: rental.originalPrice,
             delayFee: rental.delayFee,
             customer: {
@@ -73,7 +75,7 @@ async function postNewRental (req, res) {
 
     const rental = {
         ...rentalObj,
-        rentDate: dayjs().format('YYYY-MM-DD'),
+        rentDate: dayjs().format(dateFormat),
         returnDate: null,
         originalPrice,
         delayFee: null
@@ -114,8 +116,8 @@ async function postFinishRental (req, res) {
 
     const returnObj = {
         ...rentalObj,
-        rentDate: dayjs(rentalObj.rentDate).format('YYYY-MM-DD'),
-        returnDate: dayjs().format('YYYY-MM-DD'),
+        rentDate: dayjs(rentalObj.rentDate).format(dateFormat),
+        returnDate: dayjs().format(dateFormat),
         delayFee
     }
 
@@ -154,9 +156,33 @@ async function deleteRentalById (req, res) {
     }
 }
 
+async function getRentalMetrics (req, res) {
+
+    try {
+        const metricsData = await connection.query(`
+        SELECT
+            SUM("originalPrice") AS "rentalsTotal",
+            SUM("delayFee") AS "feesTotal",
+            COUNT(id) AS "rentalsQnt"
+        FROM
+            rentals;
+        `);
+        const aux = metricsData.rows[0];
+        const metricsObj = {
+            revenue: Number(aux.rentalsTotal) + Number(aux.feesTotal),
+            rentals: Number(aux.rentalsQnt),
+            average: (Number(aux.rentalsTotal) + Number(aux.feesTotal)) / Number(aux.rentalsQnt)
+        };
+        res.send(metricsObj);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}
+
 export {
     getRentals,
     postNewRental,
     postFinishRental,
-    deleteRentalById
+    deleteRentalById,
+    getRentalMetrics
 }

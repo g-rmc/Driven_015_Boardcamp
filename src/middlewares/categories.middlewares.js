@@ -3,7 +3,7 @@ import { stripHtml } from 'string-strip-html';
 import { connection } from '../db/database.js';
 
 async function validateCategoriesInput (req, res, next) {
-    let name = req.body.name;
+    const name = req.body.name;
 
     if (!name){
         return res.status(400).send('name not found');

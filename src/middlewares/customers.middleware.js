@@ -13,7 +13,7 @@ async function validateQueryFilterCustomers (req, res, next) {
 }
 
 async function validateCustomerId (req, res, next) {
-    let id = stripHtml(req.params.ID).result;
+    const id = stripHtml(req.params.ID).result;
 
     try {
         const validCustomer = await connection.query(

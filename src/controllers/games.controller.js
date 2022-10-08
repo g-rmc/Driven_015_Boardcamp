@@ -11,7 +11,7 @@ async function getGames (req,res) {
         );
         res.send(games.rows);
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500);
     }
 }
 
@@ -27,7 +27,7 @@ async function postGame (req,res) {
         );
         res.sendStatus(201);
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500);
     }
 }
 

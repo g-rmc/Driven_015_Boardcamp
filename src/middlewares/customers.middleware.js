@@ -27,7 +27,7 @@ async function validateCustomerId (req, res, next) {
             res.locals.customer = validCustomer.rows;
         }
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500);
     }
     
     res.locals.id = id;
@@ -60,7 +60,7 @@ async function validateNewCpf (req, res, next) {
             }
         }
     } catch (error) {
-        return res.status(500).send(error);
+        return res.status(500);
     }
 
     res.locals.customerObj = {...customerObj,

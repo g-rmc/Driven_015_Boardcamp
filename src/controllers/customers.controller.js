@@ -11,7 +11,7 @@ async function getCustomers (req, res) {
         );
         res.send(customers.rows);
     } catch (error) {
-        res.status(500);
+        res.sendStatus(500);
     }
 };
 
@@ -32,7 +32,7 @@ async function postNewCustomer (req, res) {
         );
         res.sendStatus(201);
     } catch (error) {
-        res.status(500);
+        res.sendStatus(500);
     }
 };
 
@@ -53,7 +53,7 @@ async function editCustomerById (req, res) {
         );
         res.sendStatus(200);
     } catch (error) {
-        res.status(500);
+        res.sendStatus(500);
     }
 };
 

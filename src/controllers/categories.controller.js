@@ -7,7 +7,7 @@ async function getCategories (req, res) {
         );
         res.send(categories.rows);
     } catch (error) {
-        res.status(500);
+        res.sendStatus(500);
     }
 }
 
@@ -19,7 +19,7 @@ async function postCategory (req, res) {
         [name]);
         res.sendStatus(201);
     } catch (error) {
-        res.status(500);
+        res.sendStatus(500);
     }
 }
 

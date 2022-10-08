@@ -31,7 +31,7 @@ async function validadeNewGame (req, res, next) {
             return res.status(400).send('categoryId not found');
         }
     } catch (error) {
-        return res.status(500);
+        return res.sendStatus(500);
     };
 
     try {
@@ -44,7 +44,7 @@ async function validadeNewGame (req, res, next) {
             return res.status(409).send('name already exists');
         }
     } catch (error) {
-        return res.status(500);
+        return res.sendStatus(500);
     };
 
     res.locals.gameObj = {...gameObj,

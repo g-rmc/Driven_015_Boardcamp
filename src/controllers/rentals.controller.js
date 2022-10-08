@@ -63,7 +63,7 @@ async function getRentals (req, res) {
 
         res.send(rentals);
     } catch (error) {
-        res.status(500);
+        res.sendStatus(500);
     }
 }
 
@@ -100,7 +100,7 @@ async function postNewRental (req, res) {
         );
         res.sendStatus(201);
     } catch (error) {
-        res.status(500);
+        res.sendStatus(500);
     }
 }
 
@@ -138,7 +138,7 @@ async function postFinishRental (req, res) {
         );
         res.sendStatus(200);
     } catch (error) {
-        res.status(500);
+        res.sendStatus(500);
     }
 }
 
@@ -152,7 +152,7 @@ async function deleteRentalById (req, res) {
         );
         res.sendStatus(200);
     } catch (error) {
-        res.status(500);
+        res.sendStatus(500);
     }
 }
 
@@ -175,7 +175,7 @@ async function getRentalMetrics (req, res) {
         };
         res.send(metricsObj);
     } catch (error) {
-        res.status(500);
+        res.sendStatus(500);
     }
 }
 

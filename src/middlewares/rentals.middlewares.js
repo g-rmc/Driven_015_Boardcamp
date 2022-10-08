@@ -35,7 +35,7 @@ async function validateRentalInputs (req, res, next) {
             return res.status(400).send('customerId not found');
         }
     } catch (error) {
-        return res.status(500);
+        return res.sendStatus(500);
     }
 
     try {
@@ -48,7 +48,7 @@ async function validateRentalInputs (req, res, next) {
         }
         gameObj = validGame.rows[0];
     } catch (error) {
-        return res.status(500);
+        return res.sendStatus(500);
     }
 
     try {
@@ -65,7 +65,7 @@ async function validateRentalInputs (req, res, next) {
             return res.status(400).send('game not available');
         }
     } catch (error) {
-        return res.status(500);
+        return res.sendStatus(500);
     }
 
     res.locals.rentalObj = rentalObj;
@@ -92,7 +92,7 @@ async function validateRentalIdInput (req, res, next) {
         }
         rentalObj = validRental.rows[0];
     } catch (error) {
-        return res.status(500);
+        return res.sendStatus(500);
     };
 
     if (rentalObj.returnDate) {

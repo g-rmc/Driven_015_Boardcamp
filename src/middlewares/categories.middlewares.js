@@ -15,7 +15,7 @@ async function validateCategoriesInput (req, res, next) {
             return res.status(409).send('name must be unique');
         }
     } catch (error) {
-        return res.status(500).send(error);
+        return res.status(500);
     }
 
     res.locals.name = stripHtml(name).result;
